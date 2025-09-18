@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Quiz Vibe Coding — Hyper Animé</title>
+  <style>
+    /* === VARIABLES & RESET === */
+    :root {
+      --bg-1: #0d1117;
+      --bg-2: #1b1f27;
+      --panel: rgba(27,27,27,0.9);
+      --text: #f5f5f5;
+      --muted: #bbb;
+      --primary: #4fc3f7; /* 🔵 garder la même couleur principale */
+      --ok: #2e7d32;      /* ✅ vert correct (déjà utilisé) */
+      --ko: #c62828;      /* ❌ rouge erreur (déjà utilisé) */
+      --shadow: 0 0 25px rgba(0,0,0,0.5);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      overflow: hidden;
+      font-family: "Segoe UI", Roboto, system-ui, -apple-system, sans-serif;
+      background: radial-gradient(1200px 800px at 80% -10%, rgba(79,195,247,0.25), transparent 60%),
+                  radial-gradient(900px 700px at -10% 110%, rgba(79,195,247,0.15), transparent 60%),
+                  linear-gradient(135deg, var(--bg-1), var(--bg-2));
+      color: var(--text);
+    }
+
+    /* === CANVAS de fond + bruit === */
+    canvas#bg, canvas#confetti {
+      position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0;
+      display: block; pointer-events: none;
+    }
+    .noise {
+      position: fixed; inset: -50px; z-index: 0; pointer-events: none;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2"/></filter><rect width="100%" height="100%" filter="url(%23n)" opacity="0.04"/></svg>');
+      mix-blend-mode: soft-light; animation: drift 12s linear infinite;
+    }
+    @keyframes drift { from { transform: translate3d(0,0,0);} to { transform: translate3d(50px,0,0);} }
+
+    /* === WRAPPER === */
+    .wrap { position: relative; z-index: 2; width: 100%; height: 100%; display: grid; place-items: center; padding: 4vmin; }
+
+    /* === QUIZ CARD === */
+    .quiz {
+      width: min(820px, 92vw);
+      background: var(--panel);
+      border-radius: 20px;
+      padding: 2.2rem clamp(1.2rem, 3vw, 3rem);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px) saturate(1.1);
+      transform-style: preserve-3d;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .quiz:hover { box-shadow: 0 20px 60px rgba(0,0,0,0.55); }
+
+    .title {
+      display: flex; align-items: center; justify-content: center; gap: .6rem;
+      font-weight: 700; letter-spacing: .4px; margin: 0 0 1.2rem;
+      text-align: center; color: var(--primary);
+    }
+    .title .pulse {
+      width: 10px; height: 10px; border-radius: 50%; background: var(--primary);
+      box-shadow: 0 0 0 0 rgba(79,195,247,.7);
+      animation: pulse 1.8s ease-out infinite;
+    }
+    @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(79,195,247,.7);} 70% { box-shadow: 0 0 0 18px rgba(79,195,247,0);} 100% { box-shadow: 0 0 0 0 rgba(79,195,247,0);} }
+
+    /* === PROGRESS === */
+    .progress { display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 1rem; margin-bottom: 1rem; }
+    .progress .labels { color: var(--muted); font-size: .95rem; display: flex; gap: 1rem; align-items: center; }
+    .bar { position: relative; height: 10px; background: #20232b; border-radius: 999px; overflow: hidden; }
+    .bar .fill {
+      width: 0%; height: 100%; background: linear-gradient(90deg, var(--primary), rgba(79,195,247,.6));
+      position: relative; transition: width .5s cubic-bezier(.2,.8,.2,1);
+    }
+    .bar .fill::after {
+      content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(45deg, rgba(255,255,255,.08) 0 10px, rgba(255,255,255,0) 10px 20px);
+      mix-blend-mode: overlay; animation: slide 1.2s linear infinite;
+    }
+    @keyframes slide { from { transform: translateX(-20%);} to { transform: translateX(20%);} }
+
+    /* === QUESTION & ANSWERS === */
+    .question { font-size: clamp(1.1rem, 2.5vw, 1.35rem); line-height: 1.5; margin: 1.2rem 0 1rem; }
+    .answers { display: grid; gap: .65rem; }
+    .btn {
+      position: relative; display: block; width: 100%; text-align: left;
+      background: #2a2a2a; color: var(--text); border: 1px solid #2f2f2f; border-radius: 12px;
+      padding: 0.95rem 1.1rem; cursor: pointer; font-size: 1rem; isolation: isolate;
+      transform: translateZ(0); transition: transform .18s ease, border-color .25s ease, background .25s ease, box-shadow .25s ease;
+      overflow: hidden;
+    }
+    .btn:hover { transform: translateY(-1px) scale(1.01); border-color: rgba(79,195,247,.4); box-shadow: 0 6px 18px rgba(79,195,247,.08); }
+    .btn:active { transform: translateY(0) scale(.995); }
+
+    /* Ripple */
+    .ripple { position: absolute; border-radius: 999px; transform: translate(-50%, -50%); pointer-events: none; opacity: .6;
+      background: radial-gradient(circle, rgba(79,195,247,.35) 0%, rgba(79,195,247,0) 70%);
+      animation: ripple .6s ease-out forwards; }
+    @keyframes ripple { from { width: 0; height: 0; opacity: .65;} to { width: 600px; height: 600px; opacity: 0; } }
+
+    /* States */
+    .btn.correct { background: color-mix(in oklab, var(--ok) 88%, black 12%); border-color: color-mix(in oklab, var(--ok) 65%, white 10%); animation: pop .5s ease; }
+    .btn.wrong { background: color-mix(in oklab, var(--ko) 88%, black 12%); border-color: color-mix(in oklab, var(--ko) 65%, white 10%); animation: shake .45s ease; }
+    @keyframes pop { 0% { transform: scale(1);} 50% { transform: scale(1.04);} 100% { transform: scale(1);} }
+    @keyframes shake { 0%,100%{ transform: translateX(0);} 20%{ transform: translateX(-6px);} 40%{ transform: translateX(6px);} 60%{ transform: translateX(-4px);} 80%{ transform: translateX(4px);} }
+
+    /* Toast */
+    .toast {
+      position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%) translateY(30px);
+      background: #1f1f1f; color: var(--text); border: 1px solid #2a2a2a; padding: .7rem 1rem; border-radius: 12px;
+      box-shadow: var(--shadow); opacity: 0; z-index: 3; pointer-events: none;
+    }
+    .toast.show { animation: toast-in .4s ease forwards, toast-out .4s ease 1.7s forwards; }
+    @keyframes toast-in { to { opacity: 1; transform: translateX(-50%) translateY(0);} }
+    @keyframes toast-out { to { opacity: 0; transform: translateX(-50%) translateY(30px);} }
+
+    /* Footer actions */
+    .actions { display: flex; gap: .6rem; justify-content: space-between; align-items: center; margin-top: 1.1rem; }
+    .pill {
+      border: 1px solid rgba(79,195,247,.5); color: var(--primary); background: rgba(79,195,247,.08);
+      padding: .55rem .9rem; border-radius: 999px; font-size: .9rem; cursor: pointer;
+      transition: transform .18s ease, background .25s ease, border-color .25s ease; user-select: none;
+    }
+    .pill:hover { transform: translateY(-1px); background: rgba(79,195,247,.12); }
+    .pill:active { transform: translateY(0); }
+
+    .result { margin-top: .8rem; text-align: center; font-size: 1.1rem; font-weight: 600; color: #fff; min-height: 1.6rem; }
+
+    /* 3D hover tilt (subtle) */
+    .tilt { perspective: 900px; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .btn, .quiz, .bar .fill, .toast { transition: none; animation: none; }
+      .noise { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Fonds animés -->
+  <canvas id="bg"></canvas>
+  <canvas id="confetti"></canvas>
+  <div class="noise" aria-hidden="true"></div>
+
+  <div class="wrap">
+    <div class="tilt">
+      <section class="quiz" id="quiz">
+        <h1 class="title"><span class="pulse" aria-hidden="true"></span> Quiz Vibe Coding</h1>
+
+        <div class="progress">
+          <div class="labels">
+            <span id="progress-text">Question 1/8</span>
+            <span>•</span>
+            <span id="score-text">Score : 0</span>
+          </div>
+          <button id="btn-skip" class="pill" title="Passer cette question">Passer ⇢</button>
+        </div>
+        <div class="bar" aria-hidden="true"><div class="fill" id="bar-fill"></div></div>
+
+        <div id="quiz-content"></div>
+        <div class="actions">
+          <div class="pill" id="btn-restart" hidden>Rejouer</div>
+          <div class="result" id="result"></div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    // === QUESTIONS (conservées strictement) ===
+    const questions = [
+      { q: "À quoi sert prefers-reduced-motion ?", a: [
+          {text: "À détecter si l’utilisateur préfère moins d’animations", correct: true},
+          {text: "À activer un mode sombre automatique"},
+          {text: "À réduire la taille des images"}
+        ]},
+      { q: "Avantage principal de prefers-reduced-motion ?", a: [
+          {text: "Améliorer l’accessibilité pour les personnes sensibles aux animations", correct: true},
+          {text: "Réduire la taille des fichiers CSS"},
+          {text: "Accélérer les temps de chargement"}
+        ]},
+      { q: "Inconvénient possible de la Web Animations API ?", a: [
+          {text: "Elle peut augmenter la consommation de ressources", correct: true},
+          {text: "Elle n’est pas compatible avec tous les navigateurs récents"},
+          {text: "Elle bloque l’interface utilisateur"}
+        ]},
+      { q: "Avantage majeur de la Canvas API ?", a: [
+          {text: "Permet de créer des rendus 2D complexes et dynamiques", correct: true},
+          {text: "Permet de changer la couleur du texte"},
+          {text: "Permet de gérer les formulaires HTML"}
+        ]},
+      { q: "Inconvénient de la Canvas API ?", a: [
+          {text: "Pas sémantique et difficilement accessible aux lecteurs d’écran", correct: true},
+          {text: "Trop lente pour les jeux"},
+          {text: "Incompatible avec JavaScript"}
+        ]},
+      { q: "Pointer Events unifie...", a: [
+          {text: "La gestion des clics, touch et stylus", correct: true},
+          {text: "Les événements clavier"},
+          {text: "Les animations CSS"}
+        ]},
+      { q: "Avantage des Pointer Events ?", a: [
+          {text: "Un code plus simple pour gérer plusieurs types d’interaction", correct: true},
+          {text: "Ils augmentent la taille du DOM"},
+          {text: "Ils désactivent le tactile"}
+        ]},
+      { q: "Inconvénient potentiel des Pointer Events ?", a: [
+          {text: "Certains anciens navigateurs ne les supportent pas", correct: true},
+          {text: "Ils bloquent les clics souris"},
+          {text: "Ils ne fonctionnent pas sur mobile"}
+        ]}
+    ];
+
+    // === STATE ===
+    let current = 0, score = 0, locked = false;
+    const elQuiz = document.getElementById('quiz');
+    const quizContent = document.getElementById('quiz-content');
+    const result = document.getElementById('result');
+    const progressText = document.getElementById('progress-text');
+    const scoreText = document.getElementById('score-text');
+    const barFill = document.getElementById('bar-fill');
+    const toast = document.getElementById('toast');
+
+    const btnSkip = document.getElementById('btn-skip');
+    const btnRestart = document.getElementById('btn-restart');
+
+    // === HELPERS ===
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function $(sel, root=document){ return root.querySelector(sel); }
+    function $all(sel, root=document){ return [...root.querySelectorAll(sel)]; }
+    function shuffle(arr){ for(let i=arr.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; } return arr; }
+
+    function setProgress(){
+      progressText.textContent = `Question ${current+1}/${questions.length}`;
+      scoreText.textContent = `Score : ${score}`;
+      const ratio = Math.min(current / questions.length, 1);
+      barFill.style.width = (ratio*100) + '%';
+    }
+
+    function ripple(e){
+      const btn = e.currentTarget;
+      const r = document.createElement('span');
+      r.className = 'ripple';
+      const rect = btn.getBoundingClientRect();
+      r.style.left = (e.clientX - rect.left) + 'px';
+      r.style.top = (e.clientY - rect.top) + 'px';
+      btn.appendChild(r);
+      r.addEventListener('animationend', ()=> r.remove());
+    }
+
+    function toastMsg(text){
+      toast.textContent = text; toast.classList.remove('show');
+      void toast.offsetWidth; // reflow for restart
+      toast.classList.add('show');
+    }
+
+    function fireConfetti(x, y){
+      if(prefersReduced) return;
+      const N = 120; const spread = Math.PI/2; const base = -Math.PI/2; // upwards
+      for(let i=0;i<N;i++){
+        confettiPush({
+          x, y,
+          vx: (Math.random()*2-1) * 6,
+          vy: -Math.random()*8 - 4,
+          g: 0.25 + Math.random()*0.1,
+          life: 60 + Math.random()*40,
+          rot: Math.random()*Math.PI*2,
+          vr: (Math.random()*2-1)*0.2,
+          size: 3 + Math.random()*4,
+          hue: 195 + Math.random()*10, // proche du primary
+          sat: 80 + Math.random()*20,
+          light: 60 + Math.random()*10
+        });
+      }
+    }
+
+    function finish(){
+      quizContent.innerHTML = `<h2 style="margin:1rem 0 0">🎉 Bravo, quiz terminé !</h2>`;
+      barFill.style.width = '100%';
+      progressText.textContent = 'Fini';
+      scoreText.textContent = `Score final : ${score}/${questions.length}`;
+      btnRestart.hidden = false;
+      toastMsg('Quiz terminé !');
+      const r = elQuiz.getBoundingClientRect();
+      fireConfetti(r.left + r.width/2, r.top + 10);
+    }
+
+    function loadQuestion(){
+      locked = false; result.textContent = '';
+      setProgress();
+      const q = questions[current];
+      const shuffledAnswers = shuffle([...q.a]);
+      quizContent.innerHTML = `
+        <div class="question">${q.q}</div>
+        <div class="answers">
+          ${shuffledAnswers.map(a => `<button class="btn" data-correct="${!!a.correct}">${a.text}</button>`).join('')}
+        </div>
+      `;
+      $all('.btn', quizContent).forEach(btn => {
+        btn.addEventListener('pointerdown', ripple);
+        btn.addEventListener('click', onAnswer);
+      });
+      // Entrée douce
+      if(!prefersReduced){
+        quizContent.animate([
+          { opacity: 0, transform: 'translateY(8px)' },
+          { opacity: 1, transform: 'translateY(0)' }
+        ], { duration: 240, easing: 'ease-out' });
+      }
+    }
+
+    function onAnswer(e){
+      if(locked) return; locked = true;
+      const btn = e.currentTarget;
+      const correct = btn.dataset.correct === 'true';
+      btn.classList.add(correct ? 'correct' : 'wrong');
+      // désactiver autres boutons + leur interaction
+      $all('.btn', quizContent).forEach(b=>{ if(b!==btn){ b.disabled = true; b.style.opacity = .6; }});
+
+      const rect = btn.getBoundingClientRect();
+      if(correct){
+        score++;
+        toastMsg('✅ Bonne réponse !');
+        fireConfetti(rect.left + rect.width/2, rect.top);
+        setTimeout(()=>{
+          current++;
+          if(current < questions.length) loadQuestion(); else finish();
+        }, 700);
+      } else {
+        toastMsg('❌ Mauvaise réponse, réessaie !');
+        // Réactiver après mini délai
+        setTimeout(()=>{
+          locked = false; result.textContent='';
+          $all('.btn', quizContent).forEach(b=>{ b.disabled = false; b.style.opacity = 1; b.classList.remove('wrong'); });
+        }, 600);
+      }
+      setProgress();
+    }
+
+    btnSkip.addEventListener('click', ()=>{
+      if(current < questions.length-1){
+        current++; loadQuestion(); toastMsg('⏭️ Question suivante');
+      } else { finish(); }
+    });
+
+    btnRestart.addEventListener('click', ()=>{
+      current = 0; score = 0; btnRestart.hidden = true; loadQuestion(); toastMsg('🔁 Nouvelle partie');
+      elQuiz.animate([{ transform:'scale(.98)' }, { transform:'scale(1)'}], { duration: 180, easing: 'ease-out' });
+    });
+
+    // === INITIAL ===
+    loadQuestion();
+
+    // === ARRIÈRE-PLAN PARTICULES (connexion + parallax léger) ===
+    const bg = document.getElementById('bg');
+    const bctx = bg.getContext('2d');
+    const conf = document.getElementById('confetti');
+    const cctx = conf.getContext('2d');
+
+    function resize(){ bg.width = conf.width = innerWidth; bg.height = conf.height = innerHeight; }
+    addEventListener('resize', resize, { passive:true }); resize();
+
+    const P = [];
+    const N = 80; // densité
+    for(let i=0;i<N;i++){
+      P.push({
+        x: Math.random()*bg.width,
+        y: Math.random()*bg.height,
+        r: Math.random()*2 + 1,
+        vx: (Math.random()-.5)*0.35,
+        vy: (Math.random()-.5)*0.35
+      });
+    }
+
+    let mx = innerWidth/2, my = innerHeight/2; // pour parallax
+    addEventListener('pointermove', (e)=>{ mx = e.clientX; my = e.clientY; });
+
+    function drawBG(){
+      bctx.clearRect(0,0,bg.width,bg.height);
+      // halos doux
+      bctx.fillStyle = 'rgba(79,195,247,0.12)';
+      for(const p of P){
+        bctx.beginPath(); bctx.arc(p.x, p.y, p.r*2.2, 0, Math.PI*2); bctx.fill();
+        // mouvement
+        p.x += p.vx; p.y += p.vy;
+        if(p.x < 0 || p.x > bg.width) p.vx *= -1;
+        if(p.y < 0 || p.y > bg.height) p.vy *= -1;
+      }
+      // lignes de connexion
+      for(let i=0;i<P.length;i++){
+        for(let j=i+1;j<P.length;j++){
+          const a=P[i], b=P[j];
+          const dx=a.x-b.x, dy=a.y-b.y; const d=Math.hypot(dx,dy);
+          if(d<120){
+            const alpha = (1 - d/120) * 0.25;
+            bctx.strokeStyle = `rgba(79,195,247,${alpha})`;
+            bctx.beginPath(); bctx.moveTo(a.x + (mx-innerWidth/2)*0.002, a.y + (my-innerHeight/2)*0.002);
+            bctx.lineTo(b.x + (mx-innerWidth/2)*0.002, b.y + (my-innerHeight/2)*0.002);
+            bctx.stroke();
+          }
+        }
+      }
+      requestAnimationFrame(drawBG);
+    }
+    if(!prefersReduced) drawBG();
+
+    // === CONFETTI SYSTEM ===
+    const confetti = [];
+    function confettiPush(p){ confetti.push(p); }
+    function drawConfetti(){
+      cctx.clearRect(0,0,conf.width,conf.height);
+      for(let i=confetti.length-1;i>=0;i--){
+        const p = confetti[i];
+        p.vy += p.g; p.x += p.vx; p.y += p.vy; p.rot += p.vr; p.life--;
+        cctx.save();
+        cctx.translate(p.x, p.y); cctx.rotate(p.rot);
+        cctx.fillStyle = `hsl(${p.hue} ${p.sat}% ${p.light}%)`;
+        cctx.fillRect(-p.size/2, -p.size/2, p.size, p.size*0.6);
+        cctx.restore();
+        if(p.life<=0 || p.y>conf.height+30) confetti.splice(i,1);
+      }
+      requestAnimationFrame(drawConfetti);
+    }
+    if(!prefersReduced) drawConfetti();
+
+    // === Carte tilt subtile ===
+    const card = document.getElementById('quiz');
+    let rect = card.getBoundingClientRect();
+    addEventListener('resize', ()=> rect = card.getBoundingClientRect());
+    card.addEventListener('pointermove', (e)=>{
+      const x = (e.clientX - (rect.left + rect.width/2)) / rect.width;
+      const y = (e.clientY - (rect.top + rect.height/2)) / rect.height;
+      if(prefersReduced) return;
+      card.style.transform = `rotateY(${x*6}deg) rotateX(${ -y*6 }deg)`;
+    });
+    card.addEventListener('pointerleave', ()=>{ card.style.transform = 'rotateY(0) rotateX(0)'; });
+  </script>
+</body>
+</html>
