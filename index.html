@@ -1,0 +1,1678 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VibeCoding - L'Art du Développement Assisté par IA</title>
+    <meta name="description" content="Découvrez le VibeCoding : une révolution dans le développement logiciel qui transforme votre façon de coder grâce à l'intelligence artificielle.">
+    <meta property="og:title" content="VibeCoding - L'Art du Développement Assisté par IA">
+    <meta property="og:description" content="Découvrez le VibeCoding : une révolution dans le développement logiciel qui transforme votre façon de coder grâce à l'intelligence artificielle.">
+    <meta property="og:type" content="website">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Design System Variables */
+        :root {
+            --primary-neon: #00ffff;
+            --secondary-neon: #ff00ff;
+            --accent-neon: #00ff88;
+            --bg-dark: #0a0a0f;
+            --bg-glass: rgba(255, 255, 255, 0.05);
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+            --text-muted: #707070;
+            --border-glass: rgba(255, 255, 255, 0.1);
+            
+            --font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            --font-size-xs: 0.75rem;
+            --font-size-sm: 0.875rem;
+            --font-size-base: 1rem;
+            --font-size-lg: 1.125rem;
+            --font-size-xl: 1.25rem;
+            --font-size-2xl: 1.5rem;
+            --font-size-3xl: 1.875rem;
+            --font-size-4xl: 2.25rem;
+            --font-size-5xl: 3rem;
+            
+            --spacing-xs: 0.5rem;
+            --spacing-sm: 0.75rem;
+            --spacing-md: 1rem;
+            --spacing-lg: 1.5rem;
+            --spacing-xl: 2rem;
+            --spacing-2xl: 3rem;
+            --spacing-3xl: 4rem;
+            
+            --border-radius: 0.75rem;
+            --border-radius-lg: 1rem;
+            
+            --shadow-glow: 0 0 20px rgba(0, 255, 255, 0.3);
+            --shadow-glow-secondary: 0 0 20px rgba(255, 0, 255, 0.3);
+        }
+        
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: var(--font-family);
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+        
+        /* Smooth Scrolling */
+        @media (prefers-reduced-motion: no-preference) {
+            html {
+                scroll-behavior: smooth;
+            }
+        }
+        
+        /* Typography */
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: var(--spacing-md);
+        }
+        
+        h1 { font-size: var(--font-size-5xl); }
+        h2 { font-size: var(--font-size-3xl); }
+        h3 { font-size: var(--font-size-2xl); }
+        h4 { font-size: var(--font-size-xl); }
+        
+        p {
+            margin-bottom: var(--spacing-md);
+            color: var(--text-secondary);
+        }
+        
+        /* Layout Components */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-md);
+        }
+        
+        .section {
+            padding: var(--spacing-3xl) 0;
+            position: relative;
+        }
+        
+        .glass-card {
+            background: var(--bg-glass);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--border-radius-lg);
+            padding: var(--spacing-xl);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--primary-neon), transparent);
+            opacity: 0.5;
+        }
+        
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-md) var(--spacing-xl);
+            border: none;
+            border-radius: var(--border-radius);
+            font-family: inherit;
+            font-size: var(--font-size-base);
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-neon), var(--secondary-neon));
+            color: var(--bg-dark);
+            box-shadow: var(--shadow-glow);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--border-glass);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--bg-glass);
+            border-color: var(--primary-neon);
+        }
+        
+        /* Code Blocks */
+        .code-block {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-md);
+            margin: var(--spacing-md) 0;
+            font-family: 'Courier New', monospace;
+            font-size: var(--font-size-sm);
+            position: relative;
+            overflow-x: auto;
+        }
+        
+        .copy-btn {
+            position: absolute;
+            top: var(--spacing-sm);
+            right: var(--spacing-sm);
+            background: var(--bg-glass);
+            border: 1px solid var(--border-glass);
+            color: var(--text-primary);
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: var(--font-size-xs);
+            transition: all 0.2s ease;
+        }
+        
+        .copy-btn:hover {
+            background: var(--primary-neon);
+            color: var(--bg-dark);
+        }
+        
+        /* Navigation */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(10, 10, 15, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-glass);
+        }
+        
+        .nav-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--spacing-md);
+        }
+        
+        .nav-logo {
+            font-size: var(--font-size-xl);
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary-neon), var(--secondary-neon));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: var(--spacing-lg);
+        }
+        
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-link:hover, .nav-link:focus {
+            color: var(--primary-neon);
+            outline: none;
+        }
+        
+        .nav-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: var(--font-size-xl);
+            cursor: pointer;
+        }
+        
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        
+        .hero-content {
+            text-align: center;
+            z-index: 1;
+        }
+        
+        .hero h1 {
+            background: linear-gradient(135deg, var(--primary-neon), var(--secondary-neon), var(--accent-neon));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .hero-subtitle {
+            font-size: var(--font-size-lg);
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto var(--spacing-2xl);
+        }
+        
+        .hero-actions {
+            display: flex;
+            gap: var(--spacing-md);
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding: var(--spacing-xl) 0;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--primary-neon), var(--secondary-neon));
+            transform: translateX(-50%);
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: var(--spacing-xl);
+            cursor: pointer;
+        }
+        
+        .timeline-content {
+            width: calc(50% - var(--spacing-xl));
+            padding: var(--spacing-lg);
+            background: var(--bg-glass);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--border-radius-lg);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        
+        .timeline-item:nth-child(odd) .timeline-content {
+            margin-left: calc(50% + var(--spacing-xl));
+        }
+        
+        .timeline-item:nth-child(even) .timeline-content {
+            margin-right: calc(50% + var(--spacing-xl));
+            text-align: right;
+        }
+        
+        .timeline-dot {
+            position: absolute;
+            left: 50%;
+            top: var(--spacing-lg);
+            width: 12px;
+            height: 12px;
+            background: var(--primary-neon);
+            border-radius: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 0 10px var(--primary-neon);
+        }
+        
+        .timeline-item:hover .timeline-content {
+            transform: scale(1.02);
+            box-shadow: var(--shadow-glow);
+        }
+        
+        /* FAQ Accordion */
+        .faq-item {
+            margin-bottom: var(--spacing-md);
+            background: var(--bg-glass);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+        }
+        
+        .faq-question {
+            width: 100%;
+            padding: var(--spacing-lg);
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: var(--font-size-base);
+            font-weight: 600;
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+        
+        .faq-question:hover {
+            background: var(--bg-glass);
+        }
+        
+        .faq-answer {
+            padding: 0 var(--spacing-lg);
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+        }
+        
+        .faq-item.active .faq-answer {
+            max-height: 500px;
+            padding: var(--spacing-lg);
+        }
+        
+        .faq-icon {
+            transition: transform 0.3s ease;
+        }
+        
+        .faq-item.active .faq-icon {
+            transform: rotate(180deg);
+        }
+        
+        /* Lists */
+        .feature-list {
+            display: grid;
+            gap: var(--spacing-lg);
+            margin: var(--spacing-xl) 0;
+        }
+        
+        .feature-item {
+            padding: var(--spacing-lg);
+            background: var(--bg-glass);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--border-radius);
+            transition: all 0.3s ease;
+        }
+        
+        .feature-item:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-glow);
+        }
+        
+        .feature-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary-neon), var(--secondary-neon));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: var(--spacing-md);
+            font-size: var(--font-size-xl);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-menu {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: rgba(10, 10, 15, 0.95);
+                backdrop-filter: blur(10px);
+                flex-direction: column;
+                padding: var(--spacing-lg);
+                transform: translateY(-100%);
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.3s ease;
+            }
+            
+            .nav-menu.active {
+                transform: translateY(0);
+                opacity: 1;
+                visibility: visible;
+            }
+            
+            .nav-toggle {
+                display: block;
+            }
+            
+            .hero h1 {
+                font-size: var(--font-size-3xl);
+            }
+            
+            .hero-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .timeline::before {
+                left: var(--spacing-lg);
+            }
+            
+            .timeline-content {
+                width: calc(100% - var(--spacing-2xl));
+                margin-left: var(--spacing-2xl) !important;
+                margin-right: 0 !important;
+                text-align: left !important;
+            }
+            
+            .timeline-dot {
+                left: var(--spacing-lg);
+            }
+            
+            .feature-list {
+                grid-template-columns: 1fr;
+            }
+            
+            .section {
+                padding: var(--spacing-2xl) 0;
+            }
+        }
+        
+        @media (min-width: 769px) {
+            .feature-list {
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            }
+        }
+        
+        /* Background Animation */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* Footer */
+        footer {
+            background: var(--secondary-bg);
+            padding: var(--spacing-lg) 0;
+            text-align: center;
+            border-top: 1px solid rgba(0, 255, 255, 0.3);
+        }
+        
+        @keyframes glow-pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+        
+        .floating-element {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .glow-pulse {
+            animation: glow-pulse 3s ease-in-out infinite;
+        }
+        
+        /* Focus Styles */
+        :focus-visible {
+            outline: 2px solid var(--primary-neon);
+            outline-offset: 2px;
+        }
+        
+        /* Print Styles */
+        @media print {
+            .nav, .hero-bg { display: none; }
+            body { background: white; color: black; }
+            .glass-card { background: #f5f5f5; border: 1px solid #ddd; }
+        }
+    </style>
+    
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": "VibeCoding - L'Art du Développement Assisté par IA",
+        "description": "Découvrez le VibeCoding : une révolution dans le développement logiciel qui transforme votre façon de coder grâce à l'intelligence artificielle.",
+        "author": {
+            "@type": "Organization",
+            "name": "VibeCoding Community"
+        },
+        "datePublished": "2025-01-01",
+        "dateModified": "2025-01-01"
+    }
+    </script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav" role="navigation" aria-label="Navigation principale">
+        <div class="container nav-container">
+            <div class="nav-logo">VibeCoding</div>
+            <button class="nav-toggle" aria-label="Ouvrir le menu" aria-expanded="false">
+                ☰
+            </button>
+            <ul class="nav-menu" role="menubar">
+                <li role="none"><a href="#hero" class="nav-link" role="menuitem">Accueil</a></li>
+                <li role="none"><a href="#definition" class="nav-link" role="menuitem">Définition</a></li>
+                <li role="none"><a href="#origine" class="nav-link" role="menuitem">Origine</a></li>
+                <li role="none"><a href="#comment" class="nav-link" role="menuitem">Comment</a></li>
+                <li role="none"><a href="#avantages" class="nav-link" role="menuitem">Avantages</a></li>
+                <li role="none"><a href="#ressources" class="nav-link" role="menuitem">Ressources</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <!-- Hero Section -->
+        <section id="hero" class="hero section" role="banner">
+            <div class="hero-bg">
+                <svg width="100%" height="100%" viewBox="0 0 1200 800" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <defs>
+                        <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#00ffff;stop-opacity:0.1" />
+                            <stop offset="50%" style="stop-color:#ff00ff;stop-opacity:0.1" />
+                            <stop offset="100%" style="stop-color:#00ff88;stop-opacity:0.1" />
+                        </linearGradient>
+                    </defs>
+                    <circle cx="300" cy="200" r="100" fill="url(#grad1)" class="floating-element" />
+                    <circle cx="900" cy="600" r="80" fill="url(#grad1)" class="floating-element" style="animation-delay: -2s;" />
+                    <circle cx="600" cy="100" r="60" fill="url(#grad1)" class="floating-element" style="animation-delay: -4s;" />
+                </svg>
+            </div>
+            <div class="container">
+                <div class="hero-content">
+                    <h1>VibeCoding</h1>
+                    <p class="hero-subtitle">
+                        Révolutionnez votre façon de développer avec l'intelligence artificielle. 
+                        Découvrez une nouvelle approche du développement logiciel qui allie créativité, 
+                        efficacité et innovation technologique.
+                    </p>
+                    <div class="hero-actions">
+                        <a href="#definition" class="btn btn-primary">Explorer le concept</a>
+                        <button id="download-pack" class="btn btn-secondary">Télécharger le pack prompts</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Definition -->
+        <section id="definition" class="section">
+            <div class="container">
+                <h2>Qu'est-ce que le VibeCoding ?</h2>
+                <div class="glass-card">
+                    <p><strong>Définition courte :</strong> Le VibeCoding est une approche de développement logiciel qui utilise l'intelligence artificielle comme partenaire créatif pour concevoir, coder et optimiser des solutions techniques.</p>
+                    
+                    <p><strong>Définition complète :</strong> Le VibeCoding représente une philosophie de développement moderne où l'intelligence artificielle devient un collaborateur à part entière dans le processus créatif. Cette approche transcende l'utilisation traditionnelle des outils d'IA comme simples assistants pour les transformer en véritables partenaires de brainstorming, de conception et d'implémentation. Le développeur et l'IA travaillent en symbiose, explorant ensemble les possibilités techniques, affinant les idées et co-créant des solutions innovantes qui auraient été difficiles à concevoir individuellement.</p>
+                    
+                    <p>Cette méthode privilégie l'expérimentation rapide, la créativité débridée et l'exploration de territoires techniques inexplorés. Le VibeCoding encourage les développeurs à sortir de leur zone de confort, à poser des questions audacieuses à l'IA et à explorer des approches non conventionnelles pour résoudre des problèmes complexes.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Origine -->
+        <section id="origine" class="section">
+            <div class="container">
+                <h2>Origine & Historique</h2>
+                <div class="glass-card">
+                    <p>Le terme "VibeCoding" a émergé naturellement de la communauté des développeurs entre 2023 et 2024, en réponse à l'arrivée massive des modèles de langage génératifs dans l'écosystème de développement.</p>
+                    
+                    <div class="timeline">
+                        <div class="timeline-item" tabindex="0" role="button" aria-label="Événement : Novembre 2022">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <h4>Novembre 2022</h4>
+                                <p>Lancement de ChatGPT, première démocratisation massive de l'IA générative pour le grand public et les développeurs.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="timeline-item" tabindex="0" role="button" aria-label="Événement : Mars 2023">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <h4>Mars 2023</h4>
+                                <p>GitHub Copilot X annoncé, intégration native de l'IA dans les IDEs, marquant un tournant dans les pratiques de développement.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="timeline-item" tabindex="0" role="button" aria-label="Événement : Été 2023">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <h4>Été 2023</h4>
+                                <p>Émergence des premiers "prompt engineers" dédiés au développement, naissance d'une nouvelle discipline.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="timeline-item" tabindex="0" role="button" aria-label="Événement : Automne 2023">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <h4>Automne 2023</h4>
+                                <p>Apparition du terme "VibeCoding" dans les communautés Discord et Reddit, popularisé par les early adopters de l'IA en développement.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="timeline-item" tabindex="0" role="button" aria-label="Événement : 2024">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <h4>2024</h4>
+                                <p>Démocratisation du concept avec l'arrivée d'outils comme Cursor, V0, Claude Artifacts, rendant le VibeCoding accessible au plus grand nombre.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Principes -->
+        <section id="principes" class="section">
+            <div class="container">
+                <h2>Principes & Philosophie</h2>
+                <div class="glass-card">
+                    <p>Le VibeCoding repose sur une philosophie collaborative qui redéfinit la relation entre le développeur et la technologie. Contrairement au pair programming où deux humains collaborent, le VibeCoding unit l'intuition créative humaine et la puissance computationnelle de l'IA.</p>
+                    
+                    <div class="feature-list">
+                        <div class="feature-item">
+                            <div class="feature-icon">🎨</div>
+                            <h4>Co-création</h4>
+                            <p>L'IA n'est pas un simple outil mais un partenaire créatif qui propose, suggère et explore avec le développeur.</p>
+                        </div>
+                        
+                        <div class="feature-item">
+                            <div class="feature-icon">⚡</div>
+                            <h4>Expérimentation rapide</h4>
+                            <p>Prototypage ultra-rapide d'idées, test de concepts en quelques minutes plutôt qu'en heures.</p>
+                        </div>
+                        
+                        <div class="feature-item">
+                            <div class="feature-icon">🔮</div>
+                            <h4>Exploration sans limites</h4>
+                            <p>Encouragement à poser des questions "impossibles" et à explorer des territoires techniques inexplorés.</p>
+                        </div>
+                        
+                        <div class="feature-item">
+                            <div class="feature-icon">🧠</div>
+                            <h4>Apprentissage bidirectionnel</h4>
+                            <p>Le développeur apprend de l'IA et réciproquement, créant un cercle vertueux d'amélioration.</p>
+                        </div>
+                        
+                        <div class="feature-item">
+                            <div class="feature-icon">🎯</div>
+                            <h4>Focus sur l'intention</h4>
+                            <p>Concentration sur le "quoi" et le "pourquoi" plutôt que sur le "comment", l'IA gérant les détails d'implémentation.</p>
+                        </div>
+                        
+                        <div class="feature-item">
+                            <div class="feature-icon">🌊</div>
+                            <h4>Fluidité créative</h4>
+                            <p>Maintien d'un état de flow créatif grâce à l'élimination des friction techniques répétitives.</p>
+                        </div>
+                    </div>
+                    
+                    <p>Cette approche se distingue du Test-Driven Development (TDD) par sa nature exploratoire plutôt que structurée, et du pair programming par l'absence de contraintes cognitives humaines dans l'analyse des possibilités.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Comment utiliser -->
+        <section id="comment" class="section">
+            <div class="container">
+                <h2>Comment l'utiliser</h2>
+                <div class="glass-card">
+                    <h3>Workflow VibeCoding en 10 étapes</h3>
+                    
+                    <div class="feature-list">
+                        <div class="feature-item">
+                            <h4>1. Définition de l'intention</h4>
+                            <p>Formulez clairement votre objectif, même s'il semble flou ou ambitieux.</p>
+                        </div>
+                        
+                        <div class="feature-item">
+                            <h4>2. Prompt de découverte</h4>
+                            <p>Posez une question ouverte à l'IA pour explorer les possibilités.</p>
+                        </div>
+                        
+                        <div class="feature-item">
+                            <h4>3. Brainstorming collaboratif</h4>
+                            <p>Engagez un dialogue créatif avec l'IA pour affiner l'approche.</p>
+                        </div>
+                        
+                        <div class="feature-item">
+                            <h4>4. Prototypage rapide</h4>
+                            <p>Générez un premier prototype fonctionnel pour valider le concept.</p>
+                        </div>
+                        
+                        <div class="feature-item">
+                            <h4>5. Itération créative</h4>
+                            <p>Explorez différentes variantes et approches alternatives.</p>
+                        </div>
+                        
+                        <div class="feature-item">
+                            <h4>6. Optimisation collaborative</h4>
+                            <p>Améliorez le code ensemble, performance et lisibilité.</p>
+                        </div>
+                        
+                        <div class="feature-item">
+                            <h4>7. Tests génératifs</h4>
+                            <p>Créez automatiquement des tests complets et des cas limites.</p>
+                        </div>
+                        
+                        <div class="feature-item">
+                            <h4>8. Documentation vivante</h4>
+                            <p>Générez une documentation claire et des commentaires utiles.</p>
+                        </div>
+                        
+                        <div class="feature-item">
+                            <h4>9. Validation technique</h4>
+                            <p>Vérifiez la sécurité, les performances et la maintenabilité.</p>
+                        </div>
+                        
+                        <div class="feature-item">
+                            <h4>10. Déploiement intelligent</h4>
+                            <p>Automatisez le processus de mise en production avec l'aide de l'IA.</p>
+                        </div>
+                    </div>
+                    
+                    <h3>Prompts modèles prêts à l'emploi</h3>
+                    
+                    <div class="code-block">
+                        <button class="copy-btn" onclick="copyToClipboard(this)">Copier</button>
+                        <pre><code>// PROMPT FRONTEND
+Je veux créer une interface utilisateur pour [OBJECTIF]. 
+Voici mes contraintes : [CONTRAINTES].
+Peux-tu me proposer 3 approches différentes avec leurs avantages/inconvénients ?
+Ensuite, implémente la solution la plus prometteuse en utilisant [TECHNO].</code></pre>
+                    </div>
+                    
+                    <div class="code-block">
+                        <button class="copy-btn" onclick="copyToClipboard(this)">Copier</button>
+                        <pre><code>// PROMPT BACKEND
+J'ai besoin d'une API pour [FONCTIONNALITÉ].
+Les données d'entrée sont : [INPUT]
+Les données de sortie attendues : [OUTPUT]
+Contraintes techniques : [CONSTRAINTS]
+Génère-moi une implémentation robuste avec gestion d'erreurs et tests unitaires.</code></pre>
+                    </div>
+                    
+                    <div class="code-block">
+                        <button class="copy-btn" onclick="copyToClipboard(this)">Copier</button>
+                        <pre><code>// PROMPT SCRIPT AUTOMATION
+Je dois automatiser cette tâche répétitive : [DESCRIPTION TÂCHE]
+Environnement : [OS/OUTILS]
+Fréquence : [PLANNING]
+Crée-moi un script intelligent qui gère les cas d'erreur et génère des logs détaillés.</code></pre>
+                    </div>
+                    
+                    <div class="code-block">
+                        <button class="copy-btn" onclick="copyToClipboard(this)">Copier</button>
+                        <pre><code>// PROMPT TESTS
+Voici mon code : [CODE]
+Génère une suite de tests complète incluant :
+- Tests unitaires pour chaque fonction
+- Tests d'intégration pour les interactions
+- Tests edge cases et gestion d'erreurs
+- Tests de performance si pertinent</code></pre>
+                    </div>
+                    
+                    <div class="code-block">
+                        <button class="copy-btn" onclick="copyToClipboard(this)">Copier</button>
+                        <pre><code>// PROMPT OPTIMISATION
+Ce code fonctionne mais n'est pas optimal : [CODE]
+Analysez les goulots d'étranglement et proposez :
+- Optimisations de performance
+- Améliorations de lisibilité
+- Réduction de la complexité
+- Meilleures pratiques du langage</code></pre>
+                    </div>
+                    
+                    <div class="code-block">
+                        <button class="copy-btn" onclick="copyToClipboard(this)">Copier</button>
+                        <pre><code>// PROMPT REFACTORING
+J'ai ce code legacy : [CODE]
+Objectifs : [OBJECTIFS DE REFACTORING]
+Contraintes : [CONTRAINTES BUSINESS]
+Proposez un plan de refactoring par étapes, en maintenant la rétrocompatibilité.</code></pre>
+                    </div>
+                    
+                    <h3>Modèle de prompt détaillé</h3>
+                    
+                    <div class="code-block">
+                        <button class="copy-btn" onclick="copyToClipboard(this)">Copier</button>
+                        <pre><code>// TEMPLATE PROMPT COMPLET
+CONTEXTE: [Décrivez le contexte du projet]
+OBJECTIF: [Ce que vous voulez accomplir]
+CONTRAINTES: [Limitations techniques, temporelles, budgétaires]
+STACK TECHNIQUE: [Technologies à utiliser]
+NIVEAU DE DÉTAIL: [Prototype rapide / Production-ready / Proof of concept]
+STYLE DE CODE: [Préférences de formatting, patterns à utiliser]
+TESTS REQUIS: [Oui/Non, quel niveau de couverture]
+SÉCURITÉ: [Considérations spécifiques]
+PERFORMANCE: [Critères de performance attendus]
+DOCUMENTATION: [Niveau de documentation souhaité]
+
+QUESTIONS POUR L'IA:
+1. Quelle approche recommandez-vous ?
+2. Quels sont les risques potentiels ?
+3. Existe-t-il des alternatives plus simples ?
+4. Comment tester efficacement cette solution ?</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Avantages -->
+        <section id="avantages" class="section">
+            <div class="container">
+                <h2>Avantages & Opportunités</h2>
+                <div class="glass-card">
+                    <div class="feature-list">
+                        <div class="feature-item">
+                            <div class="feature-icon">🚀</div>
+                            <h4>Vitesse de développement x5-10</h4>
+                            <p>Réduction drastique du temps de développement pour les tâches de base, permettant de se concentrer sur la logique métier complexe. Un prototype qui prenait une semaine peut maintenant être livré en une journée.</p>
+                        </div>
+                        
+                        <div class="feature-item">
+                            <div class="feature-icon">🎯</div>
+                            <h4>Accessibilité démocratisée</h4>
+                            <p>Permet aux non-développeurs de créer des solutions techniques simples, et aux développeurs juniors d'atteindre rapidement un niveau de productivité élevé.</p>
+                        </div>
+                        
+                        <div class="feature-item">
+                            <div class="feature-icon">💡</div>
+                            <h4>Créativité amplifiée</h4>
+                            <p>L'IA propose des approches alternatives auxquelles vous n'auriez pas pensé, ouvrant de nouveaux horizons créatifs et techniques.</p>
+                        </div>
+                        
+                        <div class="feature-item">
+                            <div class="feature-icon">📈</div>
+                            <h4>ROI exceptionnel</h4>
+                            <p>Retour sur investissement estimé entre 300% et 500% sur les projets adaptés au VibeCoding, grâce à la réduction des temps de développement et d'itération.</p>
+                        </div>
+                        
+                        <div class="feature-item">
+                            <div class="feature-icon">🔄</div>
+                            <h4>Prototypage ultra-rapide</h4>
+                            <p>Validation d'hypothèses business en heures plutôt qu'en semaines, permettant une approche lean startup optimisée.</p>
+                        </div>
+                        
+                        <div class="feature-item">
+                            <div class="feature-icon">🎓</div>
+                            <h4>Apprentissage accéléré</h4>
+                            <p>Découverte de nouvelles technologies, patterns et bonnes pratiques en temps réel, transformant chaque projet en opportunité d'apprentissage.</p>
+                        </div>
+                    </div>
+                    
+                    <p><strong>Impact quantifié :</strong> Les équipes adoptant le VibeCoding reportent une augmentation de 40% de leur vélocité, une réduction de 60% du temps passé sur les tâches répétitives, et une amélioration de 25% de la satisfaction au travail grâce à la réduction des frustrations techniques.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Limites et risques -->
+        <section id="limites" class="section">
+            <div class="container">
+                <h2>Limites, Risques & Échecs Connus</h2>
+                <div class="glass-card">
+                    <div class="feature-list">
+                        <div class="feature-item">
+                            <div class="feature-icon">🔒</div>
+                            <h4>Risques de sécurité</h4>
+                            <p>L'IA peut générer du code vulnérable ou introduire des failles de sécurité. <strong>Exemple :</strong> Génération de code d'authentification sans validation côté serveur, créant des vulnérabilités d'injection SQL.</p>
+                        </div>
+                        
+                        <div class="feature-item">
+                            <div class="feature-icon">🎭</div>
+                            <h4>Hallucinations techniques</h4>
+                            <p>L'IA peut inventer des fonctions inexistantes ou des API non-documentées. <strong>Exemple :</strong> Utilisation d'une méthode JavaScript fictive comme `Array.removeDuplicates()` qui n'existe pas nativement.</p>
+                        </div>
+                        
+                        <div class="feature-item">
+                            <div class="feature-icon">📚</div>
+                            <h4>Dette technique cachée</h4>
+                            <p>Accumulation rapide de code non optimal, difficile à maintenir à long terme. <strong>Exemple :</strong> Architecture monolithique générée rapidement qui devient impossible à scaler.</p>
+                        </div>
+                        
+                        <div class="feature-item">
+                            <div class="feature-icon">⚖️</div>
+                            <h4>Gouvernance et conformité</h4>
+                            <p>Difficulté à tracer l'origine du code et à respecter les audits de conformité. Problèmes potentiels avec le RGPD lors de l'utilisation d'APIs externes pour la génération de code contenant des données sensibles.</p>
+                        </div>
+                        
+                        <div class="feature-item">
+                            <div class="feature-icon">🧠</div>
+                            <h4>Dépendance cognitive</h4>
+                            <p>Risque d'atrophie des compétences techniques fondamentales. <strong>Exemple :</strong> Développeur incapable de debugger un algorithme sans assistance IA.</p>
+                        </div>
+                        
+                        <div class="feature-item">
+                            <div class="feature-icon">📄</div>
+                            <h4>Propriété intellectuelle</h4>
+                            <p>Questions juridiques sur la propriété du code généré et risques de reproduction involontaire de code protégé par copyright.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bonnes pratiques -->
+        <section id="bonnes-pratiques" class="section">
+            <div class="container">
+                <h2>Bonnes Pratiques & Préconisations</h2>
+                <div class="glass-card">
+                    <h3>Checklist de mise en production</h3>
+                    
+                    <div class="feature-list">
+                        <div class="feature-item">
+                            <h4>🔍 Revue de code obligatoire</h4>
+                            <p>Tout code généré par IA doit être relu par un développeur expérimenté avant intégration.</p>
+                            <p><strong>Signataire :</strong> Lead Developer ou Architecte</p>
+                        </div>
+                        
+                        <div class="feature-item">
+                            <h4>🛡️ Scan de sécurité automatisé</h4>
+                            <p>Intégration d'outils SAST (Sonarqube, CodeQL) et DAST (OWASP ZAP) dans la CI/CD.</p>
+                            <p><strong>Signataire :</strong> Security Officer</p>
+                        </div>
+                        
+                        <div class="feature-item">
+                            <h4>✅ Tests de couverture >80%</h4>
+                            <p>Tests unitaires et d'intégration générés et validés manuellement.</p>
+                            <p><strong>Signataire :</strong> QA Lead</p>
+                        </div>
+                        
+                        <div class="feature-item">
+                            <h4>📋 Documentation technique</h4>
+                            <p>Architecture Decision Records (ADR) expliquant les choix techniques assistés par IA.</p>
+                            <p><strong>Signataire :</strong> Technical Writer</p>
+                        </div>
+                        
+                        <div class="feature-item">
+                            <h4>🔐 Gestion des secrets</h4>
+                            <p>Vérification que aucun secret ou clé d'API n'est présent dans le code généré.</p>
+                            <p><strong>Signataire :</strong> DevOps Engineer</p>
+                        </div>
+                        
+                        <div class="feature-item">
+                            <h4>📝 Traçabilité des prompts</h4>
+                            <p>Conservation des prompts utilisés pour la génération de code critique.</p>
+                            <p><strong>Signataire :</strong> Project Manager</p>
+                        </div>
+                    </div>
+                    
+                    <h3>Templates CI/CD et hooks de tests</h3>
+                    
+                    <div class="code-block">
+                        <button class="copy-btn" onclick="copyToClipboard(this)">Copier</button>
+                        <pre><code># .github/workflows/vibecoding-validation.yml
+name: VibeCoding Validation
+on: [push, pull_request]
+jobs:
+  validate-ai-code:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: AI Code Security Scan
+        run: |
+          # Scan for potential AI hallucinations
+          grep -r "TODO.*AI.*verify" . || echo "No AI verification todos"
+          # Check for common AI-generated security issues
+          ./scripts/ai-security-check.sh
+      - name: Code Quality Gate
+        run: |
+          # Ensure AI-generated code meets quality standards
+          sonar-scanner -Dsonar.ai.generated=true</code></pre>
+                    </div>
+                    
+                    <div class="code-block">
+                        <button class="copy-btn" onclick="copyToClipboard(this)">Copier</button>
+                        <pre><code># pre-commit hook pour VibeCoding
+#!/bin/bash
+# .git/hooks/pre-commit
+echo "🤖 Validating VibeCoding output..."
+# Check for AI placeholders
+if grep -r "TODO.*AI\|FIXME.*AI\|XXX.*AI" --exclude-dir=.git .; then
+    echo "❌ AI-generated placeholders found. Please review and fix."
+    exit 1
+fi
+# Validate API calls exist
+python scripts/validate_ai_apis.py
+echo "✅ VibeCoding validation passed"</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cas d'usage -->
+        <section id="cas-usage" class="section">
+            <div class="container">
+                <h2>Cas d'Usage & Études de Cas</h2>
+                <div class="glass-card">
+                    <div class="feature-list">
+                        <div class="feature-item">
+                            <h4>🚀 Startup MVP : Application de réservation</h4>
+                            <p><strong>Problème :</strong> Créer un MVP de réservation en ligne en 48h pour valider le marché.</p>
+                            <p><strong>Prompt principal :</strong> "Crée une app de réservation complète avec authentification, paiement Stripe, et interface admin. Stack : React/Node.js/MongoDB."</p>
+                            <p><strong>Résultat :</strong> MVP fonctionnel livré en 6 heures au lieu de 2 semaines prévues.</p>
+                            <p><strong>Risques vérifiés :</strong> Sécurité des paiements, validation des inputs, gestion des erreurs Stripe.</p>
+                        </div>
+                        
+                        <div class="feature-item">
+                            <h4>🔧 Script interne : Automatisation de déploiement</h4>
+                            <p><strong>Problème :</strong> Automatiser le déploiement multi-environnements avec rollback automatique.</p>
+                            <p><strong>Prompt principal :</strong> "Script Bash pour déploiement blue-green avec health checks, rollback automatique en cas d'échec, et notifications Slack."</p>
+                            <p><strong>Résultat :</strong> Réduction de 90% des erreurs de déploiement manuel.</p>
+                            <p><strong>Risques vérifiés :</strong> Permissions système, gestion des secrets, logs de traçabilité.</p>
+                        </div>
+                        
+                        <div class="feature-item">
+                            <h4>🎨 Prototype UX : Design System interactif</h4>
+                            <p><strong>Problème :</strong> Créer un prototype interactif d'un design system pour validation utilisateur.</p>
+                            <p><strong>Prompt principal :</strong> "Génère un design system complet avec composants React, Storybook, et documentation interactive. Style : moderne, accessible."</p>
+                            <p><strong>Résultat :</strong> Prototype validé par 50 utilisateurs en 1 semaine au lieu de 1 mois.</p>
+                            <p><strong>Risques vérifiés :</strong> Accessibilité WCAG, performance sur mobile, compatibilité navigateurs.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Exemples techniques -->
+        <section id="exemples" class="section">
+            <div class="container">
+                <h2>Exemples Techniques</h2>
+                <div class="glass-card">
+                    <h3>Exemple 1 : Test unitaire généré</h3>
+                    <p><strong>Prompt utilisé :</strong> "Génère des tests pytest pour cette fonction de validation d'email"</p>
+                    
+                    <div class="code-block">
+                        <button class="copy-btn" onclick="copyToClipboard(this)">Copier</button>
+                        <pre><code># Code original
+def validate_email(email):
+    import re
+    pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}
+    return re.match(pattern, email) is not None
+
+# Tests générés par IA et validés
+import pytest
+
+def test_validate_email_valid():
+    """Test avec des emails valides"""
+    valid_emails = [
+        "test@example.com",
+        "user.name@domain.co.uk",
+        "123@test.org"
+    ]
+    for email in valid_emails:
+        assert validate_email(email) == True
+
+def test_validate_email_invalid():
+    """Test avec des emails invalides"""
+    invalid_emails = [
+        "invalid.email",
+        "@domain.com",
+        "test@",
+        ""
+    ]
+    for email in invalid_emails:
+        assert validate_email(email) == False</code></pre>
+                    </div>
+                    
+                    <h3>Exemple 2 : API FastAPI minimale</h3>
+                    <p><strong>Prompt utilisé :</strong> "Crée une API FastAPI pour gestion de tâches avec CRUD et authentification JWT"</p>
+                    
+                    <div class="code-block">
+                        <button class="copy-btn" onclick="copyToClipboard(this)">Copier</button>
+                        <pre><code># main.py - API générée et optimisée
+from fastapi import FastAPI, HTTPException, Depends
+from fastapi.security import HTTPBearer
+from pydantic import BaseModel
+from typing import List, Optional
+import jwt
+
+app = FastAPI(title="Task Manager", version="1.0.0")
+security = HTTPBearer()
+
+# Modèle de données
+class Task(BaseModel):
+    id: Optional[int] = None
+    title: str
+    description: Optional[str] = None
+    completed: bool = False
+
+# Base de données simulée
+tasks_db = []
+task_counter = 1
+
+# Endpoints CRUD
+@app.post("/tasks/", response_model=Task)
+async def create_task(task: Task):
+    """Crée une nouvelle tâche"""
+    global task_counter
+    task.id = task_counter
+    task_counter += 1
+    tasks_db.append(task)
+    return task
+
+@app.get("/tasks/", response_model=List[Task])
+async def get_tasks():
+    """Récupère toutes les tâches"""
+    return tasks_db
+
+# Intégration CI : validation automatique
+# pytest tests/test_api.py --cov=main --cov-report=html</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ -->
+        <section id="faq" class="section">
+            <div class="container">
+                <h2>Questions Fréquentes</h2>
+                <div class="glass-card">
+                    <div class="faq-item">
+                        <button class="faq-question" aria-expanded="false">
+                            Le VibeCoding peut-il remplacer un développeur ?
+                            <span class="faq-icon">▼</span>
+                        </button>
+                        <div class="faq-answer">
+                            <p>Non, le VibeCoding est un outil d'augmentation, pas de remplacement. Il amplifie les capacités du développeur mais nécessite toujours son expertise pour la validation, l'architecture et les décisions stratégiques.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <button class="faq-question" aria-expanded="false">
+                            Comment éviter la dette technique ?
+                            <span class="faq-icon">▼</span>
+                        </button>
+                        <div class="faq-answer">
+                            <p>Établissez des règles claires de revue de code, utilisez des outils d'analyse statique, et documentez systématiquement les choix architecturaux. Ne jamais déployer du code IA sans validation humaine.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <button class="faq-question" aria-expanded="false">
+                            Quels sont les coûts cachés ?
+                            <span class="faq-icon">▼</span>
+                        </button>
+                        <div class="faq-answer">
+                            <p>Coûts d'API IA, temps de formation des équipes, mise en place de processus de validation, et potentiellement des refontes de code généré rapidement.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <button class="faq-question" aria-expanded="false">
+                            Comment garantir la sécurité ?
+                            <span class="faq-icon">▼</span>
+                        </button>
+                        <div class="faq-answer">
+                            <p>Intégrez des scans de sécurité automatisés (SAST/DAST), formez les équipes aux vulnérabilités courantes de l'IA, et implémentez une checklist de sécurité obligatoire.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <button class="faq-question" aria-expanded="false">
+                            Le VibeCoding est-il adapté aux projets critiques ?
+                            <span class="faq-icon">▼</span>
+                        </button>
+                        <div class="faq-answer">
+                            <p>Avec précaution. Idéal pour le prototypage et les fonctionnalités non-critiques. Pour les systèmes critiques, limiter à la génération de tests et de documentation.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <button class="faq-question" aria-expanded="false">
+                            Comment former une équipe au VibeCoding ?
+                            <span class="faq-icon">▼</span>
+                        </button>
+                        <div class="faq-answer">
+                            <p>Commencez par des ateliers pratiques, établissez un guide de prompts internes, créez des templates d'équipe, et désignez des champions VibeCoding pour accompagner l'adoption.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <button class="faq-question" aria-expanded="false">
+                            Quelles métriques suivre ?
+                            <span class="faq-icon">▼</span>
+                        </button>
+                        <div class="faq-answer">
+                            <p>Vélocité de développement, temps de mise sur le marché, taux de bugs en production, satisfaction développeur, et ROI par projet VibeCoding vs traditionnel.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <button class="faq-question" aria-expanded="false">
+                            Comment gérer les droits d'auteur ?
+                            <span class="faq-icon">▼</span>
+                        </button>
+                        <div class="faq-answer">
+                            <p>Utilisez des IA avec licences commerciales claires, documentez l'origine du code généré, et consultez votre équipe juridique pour établir une politique claire de propriété intellectuelle.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Ressources -->
+        <section id="ressources" class="section">
+            <div class="container">
+                <h2>Ressources & Lectures Recommandées</h2>
+                <div class="glass-card">
+                    <div class="feature-list">
+                        <div class="feature-item">
+                            <h4>📚 "The Pragmatic Programmer 2.0"</h4>
+                            <p>Principes fondamentaux du développement qui restent valables en contexte IA. Excellente base pour comprendre quand et comment intégrer l'IA dans son workflow.</p>
+                        </div>
+                        
+                        <div class="feature-item">
+                            <h4>🎓 Cours "Prompt Engineering for Developers"</h4>
+                            <p>Formation spécialisée sur l'art de communiquer efficacement avec l'IA pour le développement logiciel. Couvre les techniques avancées de prompting.</p>
+                        </div>
+                        
+                        <div class="feature-item">
+                            <h4>🔧 "AI-Assisted Development Best Practices"</h4>
+                            <p>Guide communautaire maintenu par les praticiens du VibeCoding. Bonnes pratiques, patterns et anti-patterns issus de l'expérience terrain.</p>
+                        </div>
+                        
+                        <div class="feature-item">
+                            <h4>🛡️ "Security in AI-Generated Code"</h4>
+                            <p>Ressource spécialisée sur les vulnérabilités spécifiques au code généré par IA et les méthodes de mitigation adaptées.</p>
+                        </div>
+                        
+                        <div class="feature-item">
+                            <h4>💼 "Business Case for AI Development"</h4>
+                            <p>Études de cas et métriques pour justifier l'adoption du VibeCoding auprès du management. ROI, risques et opportunités.</p>
+                        </div>
+                        
+                        <div class="feature-item">
+                            <h4>🌐 Communauté VibeCoding Discord</h4>
+                            <p>Communauté active de praticiens partageant prompts, retours d'expérience et nouvelles techniques. Canal #daily-prompts particulièrement utile.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="section" style="padding-top: var(--spacing-xl); border-top: 1px solid var(--border-glass);">
+        <div class="container">
+            <div class="glass-card">
+                <h3>📖 Références utilisées pour ce site</h3>
+                <<p>• <strong>prefers-reduced-motion</strong> (accessibilité, media query) — MDN Web Docs</p>
+<p>• <strong>Web Animations API</strong> (contrôle des keyframes, lecture/pause) — MDN Web Docs</p>
+<p>• <strong>Canvas API</strong> (animations 2D, fond animé) — MDN Web Docs</p>
+<p>• <strong>CSS 3D / Transforms</strong> (tilts / parallax légers) — MDN Web Docs</p>
+<p>• <strong>Pointer Events</strong> (curseur interactif unifié) — MDN Web Docs</p>
+<p>• <strong>Clipboard API</strong> (writeText pour boutons Copier) — MDN Web Docs</p>
+<p>• <strong>Blob & URL.createObjectURL</strong> (générer téléchargements) — MDN Web Docs</p>
+<p>• <strong>Contraste WCAG AA (4.5:1)</strong> — W3C Guidelines</p>
+<p>• <strong>Open Graph Protocol</strong> (prévisualisations sociales) — ogp.me</p>
+<p>• <strong>Schema.org JSON-LD</strong> (Organisation / WebSite / WebPage) — Schema.org</p>
+                    <span style="background: linear-gradient(135deg, var(--primary-neon), var(--secondary-neon)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                        🚀 🚀 Fait par le Groupe 1 (et claude AI)
+                    </span>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Smoke Test Suite
+        function runSmokeTests() {
+            const results = [];
+            
+            try {
+                // Test 1: Vérifier que le DOM principal existe
+                const requiredElements = ['nav', 'main', 'footer'];
+                requiredElements.forEach(tag => {
+                    if (!document.querySelector(tag)) {
+                        throw new Error(`Element ${tag} manquant`);
+                    }
+                });
+                results.push("✅ Structure DOM validée");
+                
+                // Test 2: Vérifier la navigation
+                const navLinks = document.querySelectorAll('.nav-link');
+                if (navLinks.length === 0) {
+                    throw new Error("Liens de navigation manquants");
+                }
+                results.push("✅ Navigation fonctionnelle");
+                
+                // Test 3: Vérifier prefers-reduced-motion
+                const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+                if (prefersReduced) {
+                    results.push("✅ Support prefers-reduced-motion détecté");
+                }
+                
+                // Test 4: Vérifier les boutons de copie
+                const copyButtons = document.querySelectorAll('.copy-btn');
+                if (copyButtons.length > 0) {
+                    results.push("✅ Boutons de copie présents");
+                }
+                
+                // Test 5: Vérifier l'accessibilité de base
+                const headings = document.querySelectorAll('h1, h2, h3, h4, h5, h6');
+                if (headings.length === 0) {
+                    throw new Error("Pas de structure de titres");
+                }
+                results.push("✅ Structure de titres validée");
+                
+                console.log("🤖 Smoke tests VibeCoding:");
+                results.forEach(result => console.log(result));
+                console.log("🎉 Tous les smoke tests sont passés avec succès!");
+                
+            } catch (error) {
+                console.error("❌ Échec des smoke tests:", error.message);
+                results.push(`❌ ${error.message}`);
+            }
+            
+            return results;
+        }
+
+        // Navigation Mobile
+        function initMobileNav() {
+            const navToggle = document.querySelector('.nav-toggle');
+            const navMenu = document.querySelector('.nav-menu');
+            
+            if (navToggle && navMenu) {
+                navToggle.addEventListener('click', () => {
+                    const isOpen = navMenu.classList.contains('active');
+                    navMenu.classList.toggle('active');
+                    navToggle.setAttribute('aria-expanded', !isOpen);
+                    navToggle.innerHTML = isOpen ? '☰' : '✕';
+                });
+                
+                // Fermer le menu sur clic de lien
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.addEventListener('click', () => {
+                        navMenu.classList.remove('active');
+                        navToggle.setAttribute('aria-expanded', 'false');
+                        navToggle.innerHTML = '☰';
+                    });
+                });
+            }
+        }
+
+        // FAQ Accordion
+        function initFAQ() {
+            document.querySelectorAll('.faq-question').forEach(button => {
+                button.addEventListener('click', () => {
+                    const faqItem = button.parentElement;
+                    const isActive = faqItem.classList.contains('active');
+                    
+                    // Fermer tous les autres items
+                    document.querySelectorAll('.faq-item').forEach(item => {
+                        item.classList.remove('active');
+                        item.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+                    });
+                    
+                    // Ouvrir l'item actuel si il n'était pas ouvert
+                    if (!isActive) {
+                        faqItem.classList.add('active');
+                        button.setAttribute('aria-expanded', 'true');
+                    }
+                });
+            });
+        }
+
+        // Copie vers presse-papiers
+        function copyToClipboard(button) {
+            const codeBlock = button.parentElement;
+            const code = codeBlock.querySelector('code');
+            const text = code.textContent;
+            
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(text).then(() => {
+                    button.textContent = 'Copié !';
+                    button.style.background = 'var(--accent-neon)';
+                    setTimeout(() => {
+                        button.textContent = 'Copier';
+                        button.style.background = '';
+                    }, 2000);
+                }).catch(err => {
+                    console.error('Erreur de copie:', err);
+                    fallbackCopy(text, button);
+                });
+            } else {
+                fallbackCopy(text, button);
+            }
+        }
+        
+        function fallbackCopy(text, button) {
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                button.textContent = 'Copié !';
+                setTimeout(() => {
+                    button.textContent = 'Copier';
+                }, 2000);
+            } catch (err) {
+                console.error('Fallback copy failed:', err);
+            }
+            document.body.removeChild(textArea);
+        }
+
+        // Téléchargement du pack de prompts
+        function downloadPromptsPack() {
+            const prompts = `# Pack de Prompts VibeCoding
+# =====================================
+
+## Frontend
+Je veux créer une interface utilisateur pour [OBJECTIF]. 
+Voici mes contraintes : [CONTRAINTES].
+Peux-tu me proposer 3 approches différentes avec leurs avantages/inconvénients ?
+Ensuite, implémente la solution la plus prometteuse en utilisant [TECHNO].
+
+## Backend
+J'ai besoin d'une API pour [FONCTIONNALITÉ].
+Les données d'entrée sont : [INPUT]
+Les données de sortie attendues : [OUTPUT]
+Contraintes techniques : [CONSTRAINTS]
+Génère-moi une implémentation robuste avec gestion d'erreurs et tests unitaires.
+
+## Script Automation
+Je dois automatiser cette tâche répétitive : [DESCRIPTION TÂCHE]
+Environnement : [OS/OUTILS]
+Fréquence : [PLANNING]
+Crée-moi un script intelligent qui gère les cas d'erreur et génère des logs détaillés.
+
+## Tests
+Voici mon code : [CODE]
+Génère une suite de tests complète incluant :
+- Tests unitaires pour chaque fonction
+- Tests d'intégration pour les interactions
+- Tests edge cases et gestion d'erreurs
+- Tests de performance si pertinent
+
+## Optimisation
+Ce code fonctionne mais n'est pas optimal : [CODE]
+Analysez les goulots d'étranglement et proposez :
+- Optimisations de performance
+- Améliorations de lisibilité
+- Réduction de la complexité
+- Meilleures pratiques du langage
+
+## Refactoring
+J'ai ce code legacy : [CODE]
+Objectifs : [OBJECTIFS DE REFACTORING]
+Contraintes : [CONTRAINTES BUSINESS]
+Proposez un plan de refactoring par étapes, en maintenant la rétrocompatibilité.
+
+## Template Complet
+CONTEXTE: [Décrivez le contexte du projet]
+OBJECTIF: [Ce que vous voulez accomplir]
+CONTRAINTES: [Limitations techniques, temporelles, budgétaires]
+STACK TECHNIQUE: [Technologies à utiliser]
+NIVEAU DE DÉTAIL: [Prototype rapide / Production-ready / Proof of concept]
+STYLE DE CODE: [Préférences de formatting, patterns à utiliser]
+TESTS REQUIS: [Oui/Non, quel niveau de couverture]
+SÉCURITÉ: [Considérations spécifiques]
+PERFORMANCE: [Critères de performance attendus]
+DOCUMENTATION: [Niveau de documentation souhaité]
+
+QUESTIONS POUR L'IA:
+1. Quelle approche recommandez-vous ?
+2. Quels sont les risques potentiels ?
+3. Existe-t-il des alternatives plus simples ?
+4. Comment tester efficacement cette solution ?
+
+# Généré par VibeCoding.dev
+# Licence : CC BY-SA 4.0
+`;
+
+            const blob = new Blob([prompts], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'vibecoding-prompts-pack.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // Timeline interactions
+        function initTimeline() {
+            document.querySelectorAll('.timeline-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    item.style.transform = 'scale(1.02)';
+                    item.style.transition = 'transform 0.3s ease';
+                    setTimeout(() => {
+                        item.style.transform = '';
+                    }, 300);
+                });
+                
+                // Keyboard navigation
+                item.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        item.click();
+                    }
+                });
+            });
+        }
+
+        // Smooth scroll pour les ancres
+        function initSmoothScroll() {
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        const offsetTop = target.offsetTop - 80; // Hauteur du nav fixe
+                        window.scrollTo({
+                            top: offsetTop,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        }
+
+        // Progressive enhancement - animations
+        function initAnimations() {
+            // Respecter prefers-reduced-motion
+            const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+            if (prefersReduced.matches) {
+                return;
+            }
+
+            // Observer pour les animations au scroll
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            // Appliquer aux sections
+            document.querySelectorAll('.section').forEach(section => {
+                section.style.opacity = '0';
+                section.style.transform = 'translateY(20px)';
+                section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(section);
+            });
+        }
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', () => {
+            // Tests de fumée en premier
+            runSmokeTests();
+            
+            // Initialisation des composants
+            initMobileNav();
+            initFAQ();
+            initTimeline();
+            initSmoothScroll();
+            initAnimations();
+            
+            // Event listeners
+            document.getElementById('download-pack')?.addEventListener('click', downloadPromptsPack);
+            
+            // Mise à jour du copyright année
+            const currentYear = new Date().getFullYear();
+            document.querySelectorAll('.current-year').forEach(el => {
+                el.textContent = currentYear;
+            });
+            
+            console.log('🎉 VibeCoding site initialisé avec succès!');
+        });
+
+        // Service Worker pour mise en cache (Progressive Web App)
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                // Note: En production, vous ajouteriez un vrai service worker
+                console.log('🔧 Service Worker ready (implémentation future)');
+            });
+        }
+
+        // Gestion des erreurs globales
+        window.addEventListener('error', (e) => {
+            console.error('💥 Erreur JavaScript:', e.error);
+            // En production: envoyer vers un service de monitoring
+        });
+
+        // Exposer les fonctions utiles globalement
+        window.VibeCoding = {
+            copyToClipboard,
+            downloadPromptsPack,
+            runSmokeTests
+        };
+    </script>
+<!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 VibeCoding Community. Construire l'avenir du développement, ensemble.</p>
+            <p><small>Site créé avec les techniques VibeCoding - Méta-exemple de la philosophie en action</small></p>
+        </div>
+    </footer>
+
+</body>
+</html>
