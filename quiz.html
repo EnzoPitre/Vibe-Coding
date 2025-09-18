@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Quiz Vibe Coding</title>
+
+  <!-- 🎨 TON CSS ici dans <style> -->
+  <style>
+    /* === STYLE COMPLET DU QUIZ === */
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      font-family: "Segoe UI", Roboto, sans-serif;
+      background: #111;
+      color: #f5f5f5;
+    }
+
+    canvas#bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      background: linear-gradient(135deg, #0d1117, #1b1f27);
+    }
+
+    .quiz {
+      position: relative;
+      z-index: 1;
+      background: rgba(27,27,27,0.9);
+      border-radius: 1rem;
+      padding: 2rem 3rem;
+      max-width: 600px;
+      margin: 5vh auto;
+      box-shadow: 0 0 25px rgba(0,0,0,0.5);
+      backdrop-filter: blur(6px);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 2rem;
+      color: #4fc3f7;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .progress {
+      margin-bottom: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.95rem;
+      color: #bbb;
+    }
+
+    .progress-bar {
+      height: 6px;
+      background: #2a2a2a;
+      border-radius: 3px;
+      overflow: hidden;
+      margin-top: 0.5rem;
+    }
+
+    .progress-bar-fill {
+      height: 6px;
+      background: #4fc3f7;
+      width: 0%;
+      transition: width 0.4s ease;
+    }
+
+    .question {
+      margin-bottom: 1.5rem;
+      font-size: 1.2rem;
+      line-height: 1.5;
+    }
+
+    .answers button {
+      display: block;
+      width: 100%;
+      margin: 0.5rem 0;
+      padding: 0.8rem 1rem;
+      background: #2a2a2a;
+      color: #f5f5f5;
+      border: none;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      text-align: left;
+      transition: transform 0.3s ease, background 0.3s ease;
+      font-size: 1rem;
+    }
+
+    .answers button:hover {
+      background: #333;
+      transform: scale(1.02);
+    }
+
+    .answers button.correct {
+      background: #2e7d32;
+      animation: correctAnim 0.6s ease;
+    }
+
+    .answers button.wrong {
+      background: #c62828;
+      animation: wrongAnim 0.6s ease;
+    }
+
+    @keyframes correctAnim {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes wrongAnim {
+      0% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      50% { transform: translateX(5px); }
+      75% { transform: translateX(-5px); }
+      100% { transform: translateX(0); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .answers button,
+      .answers button:hover {
+        transition: none;
+        animation: none;
+      }
+    }
+
+    .result {
+      margin-top: 2rem;
+      text-align: center;
+      font-size: 1.2rem;
+      color: #fff;
+      font-weight: 500;
+    }
+  </style>
+</head>
+
+<body>
+  <canvas id="bg"></canvas>
+
+  <div class="quiz">
+    <h1>Quiz Vibe Coding</h1>
+
+    <div class="progress">
+      <span id="progress-text">Question 1/4</span>
+      <span id="score-text">Score : 0</span>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-bar-fill" id="progress-bar-fill"></div>
+    </div>
+
+    <div id="quiz-content"></div>
+    <div class="result" id="result"></div>
+  </div>
+
+  <!-- ⚡ SCRIPT tout en bas, après le HTML ⚡ -->
+  <script>
+    const questions = [
+      {
+        q: "À quoi sert prefers-reduced-motion ?",
+        a: [
+          {text: "À détecter si l’utilisateur préfère moins d’animations", correct: true},
+          {text: "À activer un mode sombre automatique"},
+          {text: "À réduire la taille des images"}
+        ]
+      },
+      {
+        q: "Avantage principal de prefers-reduced-motion ?",
+        a: [
+          {text: "Améliorer l’accessibilité pour les personnes sensibles aux animations", correct: true},
+          {text: "Réduire la taille des fichiers CSS"},
+          {text: "Accélérer les temps de chargement"}
+        ]
+      },
+      {
+        q: "Inconvénient possible de la Web Animations API ?",
+        a: [
+          {text: "Elle peut augmenter la consommation de ressources", correct: true},
+          {text: "Elle n’est pas compatible avec tous les navigateurs récents"},
+          {text: "Elle bloque l’interface utilisateur"}
+        ]
+      },
+      {
+        q: "Avantage majeur de la Canvas API ?",
+        a: [
+          {text: "Permet de créer des rendus 2D complexes et dynamiques", correct: true},
+          {text: "Permet de changer la couleur du texte"},
+          {text: "Permet de gérer les formulaires HTML"}
+        ]
+      },
+      {
+        q: "Inconvénient de la Canvas API ?",
+        a: [
+          {text: "Pas sémantique et difficilement accessible aux lecteurs d’écran", correct: true},
+          {text: "Trop lente pour les jeux"},
+          {text: "Incompatible avec JavaScript"}
+        ]
+      },
+      {
+        q: "Pointer Events unifie...",
+        a: [
+          {text: "La gestion des clics, touch et stylus", correct: true},
+          {text: "Les événements clavier"},
+          {text: "Les animations CSS"}
+        ]
+      },
+      {
+        q: "Avantage des Pointer Events ?",
+        a: [
+          {text: "Un code plus simple pour gérer plusieurs types d’interaction", correct: true},
+          {text: "Ils augmentent la taille du DOM"},
+          {text: "Ils désactivent le tactile"}
+        ]
+      },
+      {
+        q: "Inconvénient potentiel des Pointer Events ?",
+        a: [
+          {text: "Certains anciens navigateurs ne les supportent pas", correct: true},
+          {text: "Ils bloquent les clics souris"},
+          {text: "Ils ne fonctionnent pas sur mobile"}
+        ]
+      }
+    ];
+
+    let current = 0;
+    let score = 0;
+
+    const quizContent = document.getElementById('quiz-content');
+    const result = document.getElementById('result');
+    const progressText = document.getElementById('progress-text');
+    const scoreText = document.getElementById('score-text');
+    const progressBarFill = document.getElementById('progress-bar-fill');
+
+    function shuffle(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+}
+
+function loadQuestion() {
+  const q = questions[current];
+  progressText.textContent = `Question ${current+1}/${questions.length}`;
+  scoreText.textContent = `Score : ${score}`;
+  progressBarFill.style.width = `${(current/questions.length)*100}%`;
+
+  // Mélange des réponses avant affichage
+  const shuffledAnswers = [...q.a];
+  shuffle(shuffledAnswers);
+
+  quizContent.innerHTML = `
+    <div class="question">${q.q}</div>
+    <div class="answers">
+      ${shuffledAnswers.map(a => `<button data-correct="${a.correct || false}">${a.text}</button>`).join('')}
+    </div>
+  `;
+
+  document.querySelectorAll('.answers button').forEach(btn => {
+    btn.addEventListener('click', checkAnswer);
+  });
+}
+
+
+    function checkAnswer(e) {
+      const correct = e.target.dataset.correct === "true";
+      e.target.classList.add(correct ? 'correct' : 'wrong');
+      if (correct) {
+        score++;
+        current++;
+        setTimeout(() => {
+          if (current < questions.length) {
+            loadQuestion();
+          } else {
+            quizContent.innerHTML = `<h2>🎉 Bravo, quiz terminé !</h2>`;
+            progressBarFill.style.width = '100%';
+            progressText.textContent = `Fini`;
+            scoreText.textContent = `Score final : ${score}/${questions.length}`;
+          }
+        }, 800);
+      } else {
+        result.textContent = "❌ Mauvaise réponse, réessaie !";
+        setTimeout(() => {
+          e.target.classList.remove('wrong');
+          result.textContent = "";
+        }, 1000);
+      }
+    }
+
+    loadQuestion();
+
+    // fond animé
+    const canvas = document.getElementById('bg');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    for (let i = 0; i < 60; i++) {
+      particles.push({
+        x: Math.random()*canvas.width,
+        y: Math.random()*canvas.height,
+        r: Math.random()*2+1,
+        dx: (Math.random()-0.5)*0.3,
+        dy: (Math.random()-0.5)*0.3
+      });
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = 'rgba(79,195,247,0.2)';
+      particles.forEach(p => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+        ctx.fill();
+        p.x += p.dx;
+        p.y += p.dy;
+        if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
+        if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
+      });
+      requestAnimationFrame(animate);
+    }
+    animate();
+  </script>
+</body>
+</html>
